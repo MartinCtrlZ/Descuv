@@ -1,0 +1,18 @@
+{
+ "meta": {"updated": "2026-10-18", "demo": true},
+ "promos": [
+  {"store": "tata", "title": "20% off en pastas", "tag": "20%", "days": [1], "start": "2026-10-01", "end": "2026-11-30"},
+  {"store": "tienda_inglesa", "title": "20% off en pastas", "tag": "20%", "days": [2], "start": "2026-10-01", "end": "2026-11-30"},
+  {"store": "disco", "title": "25% off en lácteos", "tag": "25%", "days": [3], "start": "2026-10-05", "end": "2026-11-15"},
+  {"store": "el_dorado", "title": "15% off en carnes", "tag": "15%", "days": [4], "start": "2026-10-01", "end": "2026-11-30"},
+  {"store": "tata", "title": "2x1 en limpieza", "tag": "2x1", "days": [5], "start": "2026-10-10", "end": "2026-11-10"},
+  {"store": "tienda_inglesa", "title": "10% off en frutas y verduras", "tag": "10%", "days": [6, 0], "start": "2026-10-01", "end": "2026-11-30"},
+  {"store": "disco", "title": "2da unidad -30% en cuidado personal", "tag": "-30%", "start": "2026-10-15", "end": "2026-10-25"}
+ ],
+ "products": [
+  {"name": "Muzzarella Conaprole 400 g", "brand": "Conaprole", "q": "muzzarella conaprole", "prices": {"tata": {"p": 289, "l": 339}, "tienda_inglesa": {"p": 329, "l": 329}, "disco": {"p": 315, "l": 345}, "el_dorado": {"p": 305, "l": 305}}},
+  {"name": "Leche entera Conaprole 1 L", "brand": "Conaprole", "q": "leche entera conaprole 1 litro", "prices": {"tata": {"p": 52, "l": 52}, "tienda_inglesa": {"p": 56, "l": 56}, "disco": {"p": 49, "l": 55}, "el_dorado": {"p": 54, "l": 54}}},
+  {"name": "Spaghetti Adria 500 g", "brand": "Adria", "q": "spaghetti adria 500", "prices": {"tata": {"p": 68, "l": 85}, "tienda_inglesa": {"p": 71, "l": 89}, "disco": {"p": 79, "l": 79}, "el_dorado": {"p": 75, "l": 75}}},
+  {"name": "Yerba Canarias 1 kg", "brand": "Canarias", "q": "yerba canarias 1 kg", "prices": {"tata": {"p": 262, "l": 262}, "tienda_inglesa": {"p": 279, "l": 279}, "disco": {"p": 269, "l": 269}, "el_dorado": {"p": 255, "l": 270}}}
+ ]
+}

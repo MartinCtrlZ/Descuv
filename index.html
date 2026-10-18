@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ofertas de súper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f4;--s:#fff;--ink:#101a2b;--mu:#5b6678;--ln:#d9dfe7}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1420;--s:#172033;--ink:#e8edf5;--mu:#9aa6ba;--ln:#27324a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 'Bricolage Grotesque',system-ui,sans-serif;padding-bottom:72px}
+main{max-width:720px;margin:auto;padding:16px}
+h1{font-size:1.9rem;margin:8px 0 2px;letter-spacing:-.02em}
+h2{margin:0;font-size:1.2rem;text-transform:capitalize}
+h3{margin:0;font-size:1.05rem}
+.sub{margin:22px 0 4px}.sub.now{text-decoration:underline;text-underline-offset:4px}
+small,.mu{color:var(--mu)}
+.pc{display:flex;gap:14px;align-items:center;background:var(--s);border-left:6px solid var(--c);border-radius:10px;padding:12px 14px;margin:10px 0}
+.tag{font-size:2rem;line-height:1;color:var(--c);min-width:84px;font-weight:800;letter-spacing:-.03em}
+.pc small{display:block}.st{font-weight:600;color:var(--c)}
+.empty{color:var(--mu);padding:12px 0}
+.demo{background:#fff3c4;color:#4a3b00;padding:8px 12px;border-radius:8px;font-size:.9rem;margin:8px 0}
+.nav{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+.nav button{font-size:1.6rem;width:44px;height:44px}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #2f6fed;outline-offset:2px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);background:var(--s);border-radius:10px;overflow:hidden}
+.cal>b{text-align:center;padding:6px 0;font-size:.85rem;color:var(--mu)}
+.d{border-top:1px solid var(--ln);min-height:62px;padding:6px 0 0;display:flex;flex-direction:column;align-items:center}
+.d span{display:flex;flex-direction:column;gap:2px;margin-top:auto;align-self:stretch}
+u{display:block;height:5px}
+.on{outline:2px solid var(--ink);outline-offset:-2px}.td{font-weight:800}
+input[type=search],#nm{width:100%;padding:12px;border:1px solid var(--ln);border-radius:10px;background:var(--s);margin:8px 0}
+.pr{background:var(--s);border-radius:10px;padding:12px 14px;margin:10px 0}
+.row{display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:baseline;padding:6px 0;border-top:1px solid var(--ln)}
+.row span{color:var(--c);font-weight:600}.row s{color:var(--mu)}.row em{font-style:normal;font-weight:800;color:#0b7a3b}
+.best{background:rgba(11,122,59,.12);margin:0 -8px;padding:6px 8px;border-radius:6px}
+.chk{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--ln)}
+.chk input{width:22px;height:22px}
+.btn{background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;font-weight:600;margin:10px 0}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--s);border-top:1px solid var(--ln)}
+nav button{flex:1;padding:14px 0;font-size:.85rem;color:var(--mu)}
+nav button[aria-current]{color:var(--ink);font-weight:800;box-shadow:inset 0 3px var(--ink)}
+</style>
+</head>
+<body>
+<main id="view"></main>
+<nav id="tabs"></nav>
+<script>
+const ST={tata:['Tata','#d7261e'],tienda_inglesa:['Tienda Inglesa','#0b6b3a'],disco:['Disco','#1f5fbf'],el_dorado:['El Dorado','#b36b00']};
+const DAYS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const TABS={hoy:'Hoy',mes:'Mes',semana:'Semana',productos:'Ofertas',comparar:'Comparar',ajustes:'Ajustes'};
+let D={promos:[],products:[],meta:{}},T='hoy',q='',mo=0;
+let S={stores:Object.keys(ST),name:'',notif:false,last:''};
+try{Object.assign(S,JSON.parse(localStorage.getItem('ofertas')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('ofertas',JSON.stringify(S))}catch(e){}};
+const iso=d=>d.toLocaleDateString('sv');
+let sel=iso(new Date());
+const esc=s=>String(s).replace(/[&<>"]/g,c=>'&#'+c.charCodeAt(0)+';');
+const fd=s=>new Date(s+'T00:00').toLocaleDateString('es-UY',{day:'numeric',month:'short'});
+const peso=n=>'$ '+n.toLocaleString('es-UY');
+const mine=()=>D.promos.filter(p=>S.stores.includes(p.store));
+const active=(p,d)=>{const k=iso(d);return (!p.start||k>=p.start)&&(!p.end||k<=p.end)&&(!p.days||p.days.includes(d.getDay()))};
+const pc=p=>`<div class="pc" style="--c:${ST[p.store][1]}"><b class="tag">${esc(p.tag)}</b><div><span class="st">${ST[p.store][0]}</span><h3>${esc(p.title)}</h3><small>${p.days?p.days.map(x=>DAYS[x]).join(' y ')+'. ':''}${p.end?'Hasta el '+fd(p.end)+'.':''}</small></div></div>`;
+const list=(ps,msg)=>ps.map(pc).join('')||`<p class="empty">${msg||'Sin promociones en tus supers.'}</p>`;
+
+function hoy(){const n=new Date();
+ return `<h1>Hola${S.name?', '+esc(S.name):''}</h1><p class="mu">${DAYS[n.getDay()]} ${n.toLocaleDateString('es-UY',{day:'numeric',month:'long'})}</p>${demo()}${list(mine().filter(p=>active(p,n)),'Hoy no hay promociones en los supers que elegiste. Podés sumar más en Ajustes.')}`}
+const demo=()=>D.meta.demo?'<div class="demo">Datos de ejemplo. Reemplazalos en data/promos.json.</div>':'';
+
+function mes(){const n=new Date(),f=new Date(n.getFullYear(),n.getMonth()+mo,1),nd=new Date(f.getFullYear(),f.getMonth()+1,0).getDate();
+ let c='<i></i>'.repeat((f.getDay()+6)%7);
+ for(let d=1;d<=nd;d++){const dt=new Date(f.getFullYear(),f.getMonth(),d),k=iso(dt);
+  c+=`<button class="d${k===sel?' on':''}${k===iso(n)?' td':''}" data-d="${k}">${d}<span>${mine().filter(p=>active(p,dt)).map(p=>`<u style="background:${ST[p.store][1]}"></u>`).join('')}</span></button>`}
+ const sd=new Date(sel+'T00:00');
+ return `<div class="nav"><button data-m="-1" aria-label="Mes anterior">‹</button><h2>${f.toLocaleDateString('es-UY',{month:'long',year:'numeric'})}</h2><button data-m="1" aria-label="Mes siguiente">›</button></div><div class="cal">${'LMMJVSD'.split('').map(x=>`<b>${x}</b>`).join('')}${c}</div><h3 class="sub">${DAYS[sd.getDay()]} ${sd.getDate()}</h3>${list(mine().filter(p=>active(p,sd)),'Sin promociones este día en tus supers.')}`}
+
+function semana(){const n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate()-((n.getDay()+6)%7));
+ return Array.from({length:7},(_,i)=>{const d=new Date(m.getFullYear(),m.getMonth(),m.getDate()+i);
+  return `<h3 class="sub${iso(d)===iso(n)?' now':''}">${DAYS[d.getDay()]} ${d.getDate()}</h3>${list(mine().filter(p=>active(p,d)),'Sin promociones.')}`}).join('')}
+
+const hit=p=>(p.name+' '+(p.brand||'')).toLowerCase().includes(q.toLowerCase());
+function ofertas(){return D.products.filter(hit).map(p=>{
+ const r=Object.entries(p.prices).filter(([s,x])=>S.stores.includes(s)&&x.l>x.p);
+ return r.length?`<div class="pr"><h3>${esc(p.name)}</h3>${r.map(([s,x])=>`<div class="row" style="--c:${ST[s][1]}"><span>${ST[s][0]}</span><s>${peso(x.l)}</s><b>${peso(x.p)}</b><em>-${Math.round(100-x.p/x.l*100)}%</em></div>`).join('')}</div>`:''}).join('')||'<p class="empty">No hay productos en oferta con esa búsqueda.</p>'}
+function comp(){return D.products.filter(hit).map(p=>{
+ const r=Object.entries(p.prices).sort((a,b)=>a[1].p-b[1].p);
+ return `<div class="pr"><h3>${esc(p.name)}</h3>${r.map(([s,x],i)=>`<div class="row${i?'':' best'}" style="--c:${ST[s][1]}"><span>${ST[s][0]}</span><s>${x.l>x.p?peso(x.l):''}</s><b>${peso(x.p)}</b><em>${i?'+'+Math.round(x.p/r[0][1].p*100-100)+'%':'Más barato'}</em></div>`).join('')}</div>`}).join('')||'<p class="empty">No encontramos ese producto.</p>'}
+const buscar=f=>`<input id="q" type="search" placeholder="Buscar producto, ej. muzzarella" value="${esc(q)}"><div id="res">${f()}</div>`;
+
+function ajustes(){return `<h1>Ajustes</h1>${demo()}<h3 class="sub">Mis supermercados</h3>${Object.entries(ST).map(([k,v])=>`<label class="chk"><input type="checkbox" data-s="${k}" ${S.stores.includes(k)?'checked':''}>${v[0]}</label>`).join('')}
+<h3 class="sub">Mi perfil</h3><input id="nm" placeholder="Tu nombre (se guarda en este dispositivo)" value="${esc(S.name)}">
+<h3 class="sub">Aviso diario</h3><p class="mu">Al abrir la app cada día, te avisa las promos de tus supers.</p><button class="btn" id="nt">${S.notif?'Avisos activados':'Activar avisos'}</button>
+<p class="mu">Datos actualizados: ${D.meta.updated||'sin datos'}</p>`}
+
+const V={hoy,mes,semana,productos:()=>buscar(ofertas),comparar:()=>buscar(comp),ajustes};
+function render(){$v.innerHTML=V[T]();$t.innerHTML=Object.entries(TABS).map(([k,v])=>`<button data-t="${k}" ${k===T?'aria-current="page"':''}>${v}</button>`).join('')}
+const $v=document.getElementById('view'),$t=document.getElementById('tabs');
+
+async function notify(){
+ if(!S.notif||!('Notification' in window)||Notification.permission!=='granted')return;
+ const n=new Date(),k=iso(n);if(S.last===k)return;
+ const ps=mine().filter(p=>active(p,n));if(!ps.length)return;
+ const t='Hoy '+DAYS[n.getDay()].toLowerCase(),body=ps.map(p=>`${p.title} en ${ST[p.store][0]}`).join('\n');
+ const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();
+ reg?reg.showNotification(t,{body}):new Notification(t,{body});
+ S.last=k;save();
+}
+
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('[data-t],[data-m],[data-d],#nt');if(!b)return;
+ if(b.dataset.t){T=b.dataset.t;q=''}
+ if(b.dataset.m)mo+=+b.dataset.m;
+ if(b.dataset.d)sel=b.dataset.d;
+ if(b.id==='nt'&&'Notification' in window){S.notif=await Notification.requestPermission()==='granted';save();notify()}
+ render();
+});
+document.addEventListener('change',e=>{const s=e.target.dataset.s;if(!s)return;
+ S.stores=e.target.checked?[...S.stores,s]:S.stores.filter(x=>x!==s);save()});
+document.addEventListener('input',e=>{
+ if(e.target.id==='q'){q=e.target.value;document.getElementById('res').innerHTML=(T==='productos'?ofertas:comp)()}
+ if(e.target.id==='nm'){S.name=e.target.value;save()}});
+
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+fetch('data/promos.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;render();notify()}).catch(()=>{render();$v.insertAdjacentHTML('afterbegin','<p class="empty">No se pudo cargar data/promos.json.</p>')});
+render();
+</script>
+</body>
+</html>
