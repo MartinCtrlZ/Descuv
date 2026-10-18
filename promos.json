@@ -1,13 +1,19 @@
 {
  "meta": {"updated": "2026-10-18", "demo": true},
  "promos": [
-  {"store": "tata", "title": "20% off en pastas", "tag": "20%", "days": [1], "start": "2026-10-01", "end": "2026-11-30"},
-  {"store": "tienda_inglesa", "title": "20% off en pastas", "tag": "20%", "days": [2], "start": "2026-10-01", "end": "2026-11-30"},
-  {"store": "disco", "title": "25% off en lácteos", "tag": "25%", "days": [3], "start": "2026-10-05", "end": "2026-11-15"},
-  {"store": "el_dorado", "title": "15% off en carnes", "tag": "15%", "days": [4], "start": "2026-10-01", "end": "2026-11-30"},
-  {"store": "tata", "title": "2x1 en limpieza", "tag": "2x1", "days": [5], "start": "2026-10-10", "end": "2026-11-10"},
-  {"store": "tienda_inglesa", "title": "10% off en frutas y verduras", "tag": "10%", "days": [6, 0], "start": "2026-10-01", "end": "2026-11-30"},
-  {"store": "disco", "title": "2da unidad -30% en cuidado personal", "tag": "-30%", "start": "2026-10-15", "end": "2026-10-25"}
+  {"store": "tienda_inglesa", "title": "20% off en pollo y cerdo", "tag": "20%", "days": [1]},
+  {"store": "tienda_inglesa", "title": "20% off en frutas y verduras", "tag": "20%", "days": [2]},
+  {"store": "tienda_inglesa", "title": "20% off en pescados, mariscos y pastas secas", "tag": "20%", "days": [3]},
+  {"store": "tienda_inglesa", "title": "20% off en fiambres y panes", "tag": "20%", "days": [4]},
+  {"store": "tienda_inglesa", "title": "20% off en pizza y empanadas", "tag": "20%", "days": [5]},
+  {"store": "tata", "title": "20% off en congelados", "tag": "20%", "cond": "con OCA", "days": [1]},
+  {"store": "tata", "title": "20% off en pollo y cerdo", "tag": "20%", "cond": "con OCA", "days": [2]},
+  {"store": "tata", "title": "20% off en frutas y verduras", "tag": "20%", "cond": "con OCA", "days": [3]},
+  {"store": "tata", "title": "20% off en fiambres, quesos y cervezas", "tag": "20%", "cond": "con OCA", "days": [4]},
+  {"store": "tata", "title": "10% off", "tag": "10%", "cond": "con Mercado Pago", "days": [4]},
+  {"store": "tata", "title": "20% off en bazar", "tag": "20%", "cond": "con OCA", "days": [5]},
+  {"store": "disco", "title": "Imprecionantes: 10% extra con Hiper Más Santander", "tag": "10%", "start": "2026-09-01", "end": "2026-11-01"},
+  {"store": "disco", "title": "Canasta del ahorro", "tag": "Oferta", "start": "2026-10-16", "end": "2026-11-01"}
  ],
  "products": [
   {"name": "Muzzarella Conaprole 400 g", "brand": "Conaprole", "q": "muzzarella conaprole", "prices": {"tata": {"p": 289, "l": 339}, "tienda_inglesa": {"p": 329, "l": 329}, "disco": {"p": 315, "l": 345}, "el_dorado": {"p": 305, "l": 305}}},

@@ -64,12 +64,12 @@ const fd=s=>new Date(s+'T00:00').toLocaleDateString('es-UY',{day:'numeric',month
 const peso=n=>'$ '+n.toLocaleString('es-UY');
 const mine=()=>D.promos.filter(p=>S.stores.includes(p.store));
 const active=(p,d)=>{const k=iso(d);return (!p.start||k>=p.start)&&(!p.end||k<=p.end)&&(!p.days||p.days.includes(d.getDay()))};
-const pc=p=>`<div class="pc" style="--c:${ST[p.store][1]}"><b class="tag">${esc(p.tag)}</b><div><span class="st">${ST[p.store][0]}</span><h3>${esc(p.title)}</h3><small>${p.days?p.days.map(x=>DAYS[x]).join(' y ')+'. ':''}${p.end?'Hasta el '+fd(p.end)+'.':''}</small></div></div>`;
+const pc=p=>`<div class="pc" style="--c:${ST[p.store][1]}"><b class="tag">${esc(p.tag)}</b><div><span class="st">${ST[p.store][0]}</span><h3>${esc(p.title)}</h3>${p.cond?`<small>Pagando ${esc(p.cond)}.</small>`:''}<small>${p.days?p.days.map(x=>DAYS[x]).join(' y ')+'. ':''}${p.end?'Hasta el '+fd(p.end)+'.':''}</small></div></div>`;
 const list=(ps,msg)=>ps.map(pc).join('')||`<p class="empty">${msg||'Sin promociones en tus supers.'}</p>`;
 
 function hoy(){const n=new Date();
  return `<h1>Hola${S.name?', '+esc(S.name):''}</h1><p class="mu">${DAYS[n.getDay()]} ${n.toLocaleDateString('es-UY',{day:'numeric',month:'long'})}</p>${demo()}${list(mine().filter(p=>active(p,n)),'Hoy no hay promociones en los supers que elegiste. Podés sumar más en Ajustes.')}`}
-const demo=()=>D.meta.demo?'<div class="demo">Datos de ejemplo. Reemplazalos en data/promos.json.</div>':'';
+const demo=()=>D.meta.demo?'<div class="demo">Los precios de productos son de ejemplo. Las promos por día son las reales cargadas en data/promos.json.</div>':'';
 
 function mes(){const n=new Date(),f=new Date(n.getFullYear(),n.getMonth()+mo,1),nd=new Date(f.getFullYear(),f.getMonth()+1,0).getDate();
  let c='<i></i>'.repeat((f.getDay()+6)%7);
@@ -104,7 +104,7 @@ async function notify(){
  if(!S.notif||!('Notification' in window)||Notification.permission!=='granted')return;
  const n=new Date(),k=iso(n);if(S.last===k)return;
  const ps=mine().filter(p=>active(p,n));if(!ps.length)return;
- const t='Hoy '+DAYS[n.getDay()].toLowerCase(),body=ps.map(p=>`${p.title} en ${ST[p.store][0]}`).join('\n');
+ const t='Hoy '+DAYS[n.getDay()].toLowerCase(),body=ps.map(p=>`${p.title} en ${ST[p.store][0]}${p.cond?' '+p.cond:''}`).join('\n');
  const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();
  reg?reg.showNotification(t,{body}):new Notification(t,{body});
  S.last=k;save();
