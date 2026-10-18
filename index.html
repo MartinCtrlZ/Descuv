@@ -125,7 +125,7 @@ document.addEventListener('input',e=>{
  if(e.target.id==='nm'){S.name=e.target.value;save()}});
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-fetch('data/promos.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;render();notify()}).catch(()=>{render();$v.insertAdjacentHTML('afterbegin','<p class="empty">No se pudo cargar data/promos.json.</p>')});
+fetch('data/promos.json?'+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(d=>{D=d;render();notify()}).catch(e=>{render();$v.insertAdjacentHTML('afterbegin',`<p class="empty">No se pudo cargar data/promos.json (${esc(e.message)}).</p>`)});
 render();
 </script>
 </body>
